@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "sales")
@@ -17,15 +16,16 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime saleDate;
+    // what was sold
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
-    private Double totalAmount;
+    // how many units sold
+    @Column(nullable = false)
+    private Integer quantitySold;
 
-    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
-    private List<SaleItem> items;
-
-    @PrePersist
-    public void onCreate() {
-        this.saleDate = LocalDateTime.now();
-    }
+    // when it was sold
+    @Column(nullable = false)
+    private LocalDateTime soldAt;
 }

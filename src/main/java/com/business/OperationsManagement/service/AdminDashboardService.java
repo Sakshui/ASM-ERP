@@ -39,10 +39,9 @@ public class AdminDashboardService {
         res.setTotalRepairs(repairRepo.count());
         res.setPendingRepairs(repairRepo.countByStatus(RepairStatus.ACCEPTED));
         res.setInProgressRepairs(repairRepo.countByStatus(RepairStatus.IN_PROGRESS));
+        res.setRepairedRepairs(repairRepo.countByStatus(RepairStatus.REPAIRED));
         res.setLowStockProducts(productRepo.countByNeedsRestockTrue());
 
-        double todayRevenue = saleRepo.getTodayRevenue(LocalDate.now());
-        res.setTodayRevenue(todayRevenue);
 
         return res;
     }
@@ -65,19 +64,4 @@ public class AdminDashboardService {
         return productService.getRestockProducts();
     }
 
-    // ---------------- SALES STATS ----------------
-    public SalesStatsResponse getSalesStats() {
-
-        SalesStatsResponse res = new SalesStatsResponse();
-
-        LocalDate now = LocalDate.now();
-
-        res.setMonthlyRevenue(
-                saleRepo.getMonthlyRevenue(now.getMonthValue(), now.getYear())
-        );
-
-        res.setTotalSales(saleRepo.count());
-
-        return res;
-    }
 }

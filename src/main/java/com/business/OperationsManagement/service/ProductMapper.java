@@ -26,7 +26,7 @@ public class ProductMapper {
         res.setStockQuantity(product.getStockQuantity());
         res.setRestockThreshold(product.getRestockThreshold());
         res.setNeedsRestock(product.getNeedsRestock());
-
+        res.setDescription(product.getDescription());
         res.setImageUrl(product.getImageUrl());
 
         // Price (0 for contact-only products)

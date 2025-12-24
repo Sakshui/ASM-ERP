@@ -37,9 +37,4 @@ public class AdminDashboardController {
         return service.getInventoryAlerts();
     }
 
-    // ---------------- SALES STATS ----------------
-    @GetMapping("/sales")
-    public SalesStatsResponse getSalesStats() {
-        return service.getSalesStats();
-    }
 }

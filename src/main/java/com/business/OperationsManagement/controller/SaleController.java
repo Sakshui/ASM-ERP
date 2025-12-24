@@ -18,7 +18,8 @@ public class SaleController {
 
     @PostMapping
     public SaleResponse createSale(
-            @Valid @RequestBody CreateSaleRequest request) {
+            @RequestBody @Valid CreateSaleRequest request
+    ) {
         return service.createSale(request);
     }
 }

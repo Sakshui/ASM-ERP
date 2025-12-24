@@ -106,4 +106,55 @@ public class ProductService {
         );
         repository.save(product);
     }
+    
+    public ProductResponse getProductById(Long id) {
+        Product product = repository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        return ProductMapper.toResponse(product);
+    }
+    
+    public ProductResponse updateProduct(
+            Long productId,
+            CreateProductRequest request,
+            MultipartFile image
+    ) {
+
+        Product product = repository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        // ===== VALIDATIONS (reuse same rules as create) =====
+        if (CATEGORY_WITH_PRICE.contains(request.getCategory())
+                && request.getUnitPrice() == null) {
+            throw new IllegalArgumentException("Price is required for this category");
+        }
+
+        if (CATEGORY_WITH_CONTACT.contains(request.getCategory())
+                && (request.getWhatsappLink() == null || request.getWhatsappLink().isBlank())) {
+            throw new IllegalArgumentException("WhatsApp link is required for this category");
+        }
+
+        // ===== UPDATE FIELDS =====
+        product.setName(request.getName());
+        product.setCategory(request.getCategory());
+        product.setStockQuantity(request.getStockQuantity());
+        product.setRestockThreshold(request.getRestockThreshold());
+        product.setUnitPrice(request.getUnitPrice());
+        product.setWhatsappLink(request.getWhatsappLink());
+        product.setDescription(request.getDescription());
+
+        // ===== IMAGE UPDATE (optional) =====
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = imageStorageService.store(image);
+            product.setImageUrl(imageUrl);
+        }
+
+        // ===== RESTOCK LOGIC =====
+        product.setNeedsRestock(
+                request.getStockQuantity() <= request.getRestockThreshold()
+        );
+
+        return ProductMapper.toResponse(repository.save(product));
+    }
+
+
 }

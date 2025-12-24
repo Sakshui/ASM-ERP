@@ -12,4 +12,5 @@ public class DashboardSummaryResponse {
     private long inProgressRepairs;
     private long lowStockProducts;
     private double todayRevenue;
+    private long repairedRepairs;
 }

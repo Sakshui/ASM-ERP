@@ -11,6 +11,7 @@ import com.business.OperationsManagement.repository.SaleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,46 +27,34 @@ public class SaleService {
         this.productService = productService;
     }
 
-    @Transactional
     public SaleResponse createSale(CreateSaleRequest request) {
 
-        Sale sale = new Sale();
-        List<SaleItem> saleItems = new ArrayList<>();
+        Product product = productService.getProductOrThrow(request.getProductId());
 
-        double totalAmount = 0;
-
-        // 1️⃣ Validate & prepare items
-        for (SaleItemRequest itemReq : request.getItems()) {
-
-            Product product = productService.getProductOrThrow(itemReq.getProductId());
-
-            if (product.getStockQuantity() < itemReq.getQuantity()) {
-                throw new InvalidStateTransitionException(
-                        "Insufficient stock for product: " + product.getName());
-            }
-
-            // deduct stock
-            int newStock = product.getStockQuantity() - itemReq.getQuantity();
-            productService.updateStock(product, newStock);
-
-            SaleItem item = new SaleItem();
-            item.setSale(sale);
-            item.setProduct(product);
-            item.setQuantity(itemReq.getQuantity());
-            item.setUnitPrice(product.getUnitPrice());
-
-            double itemTotal = product.getUnitPrice() * itemReq.getQuantity();
-            item.setItemTotal(itemTotal);
-
-            totalAmount += itemTotal;
-            saleItems.add(item);
+        if (request.getQuantitySold() > product.getStockQuantity()) {
+            throw new IllegalArgumentException("Not enough stock available");
         }
 
-        // 2️⃣ Finalize sale
-        sale.setItems(saleItems);
-        sale.setTotalAmount(totalAmount);
+        // 🔽 reduce stock
+        int newStock = product.getStockQuantity() - request.getQuantitySold();
+        productService.updateStock(product, newStock);
+
+        // 🧾 save sale record
+        Sale sale = new Sale();
+        sale.setProduct(product);
+        sale.setQuantitySold(request.getQuantitySold());
+        sale.setSoldAt(LocalDateTime.now());
 
         Sale saved = saleRepository.save(sale);
-        return SaleMapper.toResponse(saved);
+
+        // response
+        SaleResponse res = new SaleResponse();
+        res.setId(saved.getId());
+        res.setProductId(product.getId());
+        res.setProductName(product.getName());
+        res.setQuantitySold(saved.getQuantitySold());
+        res.setSoldAt(saved.getSoldAt());
+
+        return res;
     }
 }

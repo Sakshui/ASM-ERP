@@ -19,6 +19,7 @@ public class ProductResponse {
     private String imageUrl;
     private double unitPrice;
     public String whatsappLink;
+    public String description;
 
     // getters & setters
 }

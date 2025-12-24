@@ -52,5 +52,24 @@ public class ProductController {
     public List<ProductResponse> restockAlerts() {
         return service.getRestockProducts();
     }
+    
+    @GetMapping("/{id}")
+    public ProductResponse getById(@PathVariable Long id) {
+        return service.getProductById(id);
+    }
+
+ // update product
+    @PatchMapping(
+            value = "/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ProductResponse updateProduct(
+            @PathVariable Long id,
+            @RequestPart("data") @Valid CreateProductRequest request,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) {
+        return service.updateProduct(id, request, image);
+    }
+
 
 }
