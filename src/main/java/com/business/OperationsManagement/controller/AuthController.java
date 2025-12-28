@@ -4,12 +4,18 @@ import com.business.OperationsManagement.dto.LoginRequest;
 import com.business.OperationsManagement.dto.LoginResponse;
 import com.business.OperationsManagement.dto.SignupRequest;
 import com.business.OperationsManagement.dto.SignupResponse;
+import com.business.OperationsManagement.dto.UpdateProfileRequest;
+import com.business.OperationsManagement.dto.UserResponse;
 import com.business.OperationsManagement.entity.User;
 import com.business.OperationsManagement.enums.UserRole;
 import com.business.OperationsManagement.repository.UserRepository;
 import com.business.OperationsManagement.security.JwtUtil;
 import com.business.OperationsManagement.security.TokenBlacklist;
+import com.business.OperationsManagement.service.UserService;
+
 import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,15 +27,17 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final TokenBlacklist tokenBlacklist;
+    private final UserService service;
 
     public AuthController(UserRepository userRepository,
                           PasswordEncoder passwordEncoder,
                           JwtUtil jwtUtil,
-                          TokenBlacklist tokenBlacklist) {
+                          TokenBlacklist tokenBlacklist, UserService service) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.tokenBlacklist = tokenBlacklist;
+        this.service = service;
     }
     
     @PostMapping("/signup")
@@ -112,5 +120,18 @@ public class AuthController {
         if (header != null && header.startsWith("Bearer ")) {
             tokenBlacklist.blacklist(header.substring(7));
         }
+    }
+    
+    @GetMapping("/me")
+    public UserResponse getMyProfile(@AuthenticationPrincipal User user) {
+        return service.getCurrentUser(user);
+    }
+
+    @PatchMapping("/me")
+    public UserResponse updateMyProfile(
+            @AuthenticationPrincipal User user,
+            @RequestBody UpdateProfileRequest request
+    ) {
+        return service.updateProfile(user, request);
     }
 }

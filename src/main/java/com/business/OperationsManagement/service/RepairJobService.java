@@ -139,7 +139,13 @@ public class RepairJobService {
 
         return RepairJobMapper.toAdminResponse(job);
     }
+    
+    public List<CustomerRepairStatusResponse> getRepairsByPhone(String phone) {
 
-
+        return repository.findByCustomer_Phone(phone)
+                .stream()
+                .map(RepairJobMapper::toCustomerResponse)
+                .toList();
+    }
 
 }

@@ -2,10 +2,14 @@ package com.business.OperationsManagement.controller;
 
 import com.business.OperationsManagement.dto.CreateUserRequest;
 import com.business.OperationsManagement.dto.CustomerLookupResponse;
+import com.business.OperationsManagement.dto.UpdateProfileRequest;
 import com.business.OperationsManagement.dto.UserResponse;
+import com.business.OperationsManagement.entity.RepairJob;
 import com.business.OperationsManagement.entity.User;
 import com.business.OperationsManagement.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,5 +55,8 @@ public class UserController {
 
         return new CustomerLookupResponse(true, user.getFullName());
     }
+    
+    
+
 
 }

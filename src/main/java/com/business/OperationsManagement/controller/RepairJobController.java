@@ -76,6 +76,12 @@ public class RepairJobController {
         return service.getRepairById(id);
     }
 
+    @GetMapping("/by-phone")
+    public List<CustomerRepairStatusResponse> getRepairsByPhone(
+            @RequestParam String phone) {
+    	return service.getRepairsByPhone(phone);
+    }
+
 
 
 
