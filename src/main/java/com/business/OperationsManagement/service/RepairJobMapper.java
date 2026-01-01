@@ -39,6 +39,7 @@ public class RepairJobMapper {
 	    res.setEstimatedPrice(job.getEstimatedPrice());
 	    res.setFinalPrice(job.getFinalPrice());
 	    res.setCustomerName(job.getCustomer().getFullName());
+	    res.setPriceNote(job.getPriceNote());
 
 	    return res;
 	}

@@ -13,7 +13,7 @@ import java.util.Date;
 public class JwtUtil {
 
     private static final String SECRET_KEY =
-            "asm-ms-super-secret-key-which-is-very-secure-123456";
+    		System.getenv("JWT_SECRET");
 
     public String generateToken(User user) {
 

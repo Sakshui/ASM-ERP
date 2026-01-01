@@ -58,12 +58,51 @@ public class RepairJobService {
                 .orElseThrow(() -> new ResourceNotFoundException("Repair job not found"));
 
         validateTransition(job.getStatus(), newStatus);
+
+        // 🔥 store previous state
+        job.setPreviousStatus(job.getStatus());
         job.setStatus(newStatus);
+        job.setStatusUpdatedAt(LocalDateTime.now());
+
         updateTimestamps(job, newStatus);
 
-        RepairJob updated = repository.save(job);
-        return RepairJobMapper.toAdminResponse(updated);
+        return RepairJobMapper.toAdminResponse(repository.save(job));
     }
+
+    public AdminRepairResponse undoStatus(Long jobId) {
+
+        RepairJob job = repository.findById(jobId)
+                .orElseThrow(() -> new ResourceNotFoundException("Repair job not found"));
+
+        if (job.getPreviousStatus() == null || job.getStatusUpdatedAt() == null) {
+            throw new InvalidStateTransitionException("Undo not available");
+        }
+
+        // ⏱ 10 seconds (testing)
+        if (job.getStatusUpdatedAt().plusSeconds(10).isBefore(LocalDateTime.now())) {
+            throw new InvalidStateTransitionException("Undo window expired");
+        }
+
+        RepairStatus currentStatus = job.getStatus();
+        RepairStatus previousStatus = job.getPreviousStatus();
+
+        // 🔥 RESET TIMESTAMPS BASED ON CURRENT STATUS
+        if (currentStatus == RepairStatus.RETURNED) {
+            job.setReturnedAt(null);
+        } else if (currentStatus == RepairStatus.REPAIRED) {
+            job.setRepairedAt(null);
+        } else if (currentStatus == RepairStatus.IN_PROGRESS) {
+            job.setInProgressAt(null);
+        }
+
+        job.setStatus(previousStatus);
+        job.setPreviousStatus(null);
+        job.setStatusUpdatedAt(null);
+
+        return RepairJobMapper.toAdminResponse(repository.save(job));
+    }
+
+
 
     // CUSTOMER: query status
     public List<CustomerRepairStatusResponse> getRepairsByCustomer(Long customerId) {

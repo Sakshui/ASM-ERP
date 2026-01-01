@@ -49,6 +49,12 @@ public class RepairJob {
     private LocalDateTime inProgressAt;
     private LocalDateTime repairedAt;
     private LocalDateTime returnedAt;
+ // RepairJob.java
+    @Enumerated(EnumType.STRING)
+    private RepairStatus previousStatus;
+
+    private LocalDateTime statusUpdatedAt;
+
 
     private LocalDateTime estimatedReturnDate;
 

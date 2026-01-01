@@ -6,6 +6,7 @@ import com.business.OperationsManagement.entity.User;
 import com.business.OperationsManagement.enums.RepairStatus;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 

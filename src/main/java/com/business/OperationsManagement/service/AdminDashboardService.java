@@ -40,8 +40,7 @@ public class AdminDashboardService {
         res.setPendingRepairs(repairRepo.countByStatus(RepairStatus.ACCEPTED));
         res.setInProgressRepairs(repairRepo.countByStatus(RepairStatus.IN_PROGRESS));
         res.setRepairedRepairs(repairRepo.countByStatus(RepairStatus.REPAIRED));
-        res.setLowStockProducts(productRepo.countByNeedsRestockTrue());
-
+        res.setLowStockProducts(productRepo.countLowStockProducts());
 
         return res;
     }

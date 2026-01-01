@@ -82,7 +82,10 @@ public class RepairJobController {
     	return service.getRepairsByPhone(phone);
     }
 
-
+    @PutMapping("/{id}/undo-status")
+    public AdminRepairResponse undoStatus(@PathVariable Long id) {
+        return service.undoStatus(id);
+    }
 
 
 }

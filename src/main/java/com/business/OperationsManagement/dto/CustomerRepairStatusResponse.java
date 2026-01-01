@@ -20,4 +20,6 @@ public class CustomerRepairStatusResponse {
     private LocalDateTime estimatedReturnDate;
     private Double estimatedPrice;
     private Double finalPrice;
+    private LocalDateTime statusUpdatedAt;
+    private String priceNote;
 }
