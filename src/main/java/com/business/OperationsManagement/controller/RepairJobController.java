@@ -54,6 +54,13 @@ public class RepairJobController {
         return service.getRepairsByCustomer(customerId);
     }
     
+    @GetMapping("/admin/customer/{customerId}")
+    public List<AdminRepairResponse> getRepairsForAdminByCustomer(
+            @PathVariable Long customerId) {
+        return service.getRepairsForAdminByCustomer(customerId);
+    }
+
+    
     @GetMapping("/my")
     public List<CustomerRepairStatusResponse> myRepairs() {
 

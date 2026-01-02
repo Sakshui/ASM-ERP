@@ -114,6 +114,16 @@ public class RepairJobService {
                 .map(RepairJobMapper::toCustomerResponse)
                 .toList();
     }
+    
+    public List<AdminRepairResponse> getRepairsForAdminByCustomer(Long customerId) {
+
+        User customer = userService.getCustomerById(customerId);
+
+        return repository.findByCustomer(customer)
+                .stream()
+                .map(RepairJobMapper::toAdminResponse)
+                .toList();
+    }
 
     // ---------- helpers ----------
 
