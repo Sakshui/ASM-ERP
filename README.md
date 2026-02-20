@@ -1,4 +1,3 @@
-
 # ASM ERP — Backend-First Operations Management API
 
 > A production-style Spring Boot backend for a sewing machine business to manage **repairs, inventory, sales, customers, and admin operations** through secure JWT APIs.
