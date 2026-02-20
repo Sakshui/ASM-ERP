@@ -203,21 +203,6 @@ docker run -p 8080:8080 \
 
 ---
 
-## Example LinkedIn Post Caption (optional)
-
-Built and deployed a backend-first ERP API for a real-world sewing machine business workflow.  
-Tech: Java 21, Spring Boot, Spring Security, JPA, PostgreSQL, JWT, Docker.  
-
-Key backend wins:
-- Role-based auth (Admin/Customer)
-- Repair lifecycle with strict state transitions
-- Inventory + sales sync with stock validation
-- Dashboard stats and restock alerts
-- Image upload and static file handling
-
-Open to backend engineering opportunities where clean architecture and business correctness matter. 🚀
-
----
 
 ## Future Enhancements
 
