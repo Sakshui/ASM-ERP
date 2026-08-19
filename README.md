@@ -191,17 +191,6 @@ docker run -p 8080:8080 \
 
 ---
 
-## Backend Engineering Highlights (for recruiters / hiring managers)
-
-- Implemented **RBAC with JWT** and a custom auth filter
-- Enforced **repair workflow transitions** as explicit domain rules
-- Added **inventory-aware sales logic** with stock safety checks
-- Built **modular service layer** with DTO mapping and repository abstraction
-- Supported **multipart media uploads** and file-based static serving
-- Produced a backend ready for integration with modern SPA frontends
-
----
-
 
 ## Future Enhancements
 
